@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
-public class HttpServer {
+public class JavaServerEntry {
     public static void main(String[] args) throws Exception {
         final ServerSocket server = new ServerSocket(8080);
         System.out.println("Listening for connection on port 8080 ....");
@@ -29,7 +29,6 @@ public class HttpServer {
                     String dayStr = "<h1>" + today.toString() + "</h1>";
                     String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + dayStr;
                     clientSocket.getOutputStream().write(httpResponse.getBytes("UTF-8"));
-
                     clientSocket.close();
                 }
             } catch (IOException e) {
