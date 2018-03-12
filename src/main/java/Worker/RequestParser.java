@@ -1,4 +1,7 @@
 package Worker;
 
-public class RequestParser {
+import java.io.InputStream;
+
+public interface RequestParser<T> {
+    T parseRequest(InputStream input) throws InvalidRequestException ;
 }
