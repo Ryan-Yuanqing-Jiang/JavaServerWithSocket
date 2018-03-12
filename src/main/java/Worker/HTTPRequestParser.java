@@ -2,7 +2,6 @@ package Worker;
 
 import Factory.RequestFactory;
 import Model.HTTPRequest;
-import com.sun.tools.internal.ws.wsdl.document.soap.SOAPUse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 // Not sure if this is the best way to utilize generics.
 public class HTTPRequestParser implements RequestParser {
@@ -23,11 +21,14 @@ public class HTTPRequestParser implements RequestParser {
      */
     @Override
     public synchronized HTTPRequest parseRequest(InputStream input) throws InvalidRequestException {
+
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(input));
-        System.out.println("Request Parser" + Thread.currentThread().toString());
+        System.out.println("Request Parser " + Thread.currentThread().toString());
+
         // Read the header first.
         List<String> requestHeader = readRequestHeader(inputReader);
         Map<String, String> headerMap = parseRequestHeader(requestHeader);
+
         // Parse request line.
         String[] requestLine = parseRequestLine(requestHeader.get(0));
 
@@ -44,6 +45,7 @@ public class HTTPRequestParser implements RequestParser {
 
     private String[] parseRequestLine(String line) throws InvalidRequestException {
         String[] requestLine = line.split(" ");
+        // System.out.println(line);
         if (requestLine.length == 3) {
             return requestLine;
         } else {
@@ -66,29 +68,36 @@ public class HTTPRequestParser implements RequestParser {
         List<String> requestHeader = new ArrayList<>();
         String line;
         try {
-            System.out.println(inputReader.readLine());
             line = inputReader.readLine();
             while (!line.isEmpty()) {
+                System.out.println(line);
                 requestHeader.add(line);
                 line = inputReader.readLine();
             }
         } catch (IOException e) {
             throw new InvalidRequestException("Invalid request header");
+        } catch (NullPointerException e) {
+
         }
         return requestHeader;
     }
 
     private synchronized String readRequestBody(BufferedReader inputReader) throws InvalidRequestException {
+
         String line;
         StringBuilder requestBody= new StringBuilder();
         try {
             line = inputReader.readLine();
+            // System.out.println(line);
             while (!line.isEmpty()) {
                 requestBody.append(line);
                 line = inputReader.readLine();
+                // System.out.println(line);
             }
         } catch (IOException e) {
             throw new InvalidRequestException("Invalid request body");
+        } catch (NullPointerException e) {
+
         }
         return requestBody.toString();
     }

@@ -15,8 +15,8 @@ public class JavaServerEntry {
         HTTPServer server = new MultiThreadServer(ServerConfigs.PORT);
         new Thread(server).start();
 
-//        HTTPServer singleServer = new SingleThreadServer(ServerConfigs.PORT);
-//        new Thread(singleServer).start();
+        HTTPServer singleServer = new SingleThreadServer(8080);
+        new Thread(singleServer).start();
 
         //        final ServerSocket server = new ServerSocket(8080);
 //        System.out.println("Listening for connection on port 8080 ....");

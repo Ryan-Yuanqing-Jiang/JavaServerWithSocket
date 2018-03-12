@@ -67,16 +67,26 @@ public class SingleThreadServer extends SimpleServer {
                         "\r\n\r\n").getBytes("UTF-8");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        reader.lines().forEach(line -> System.out.println(line));
-        //        String line = reader.readLine();
-//        try {
-//            while (!line.isEmpty()) {
-//                System.out.println(line);
-//                line = reader.readLine();
-//            }
-//        } catch (NullPointerException e) {
-//
-//        }
+        // reader.lines().forEach(line -> System.out.println(line));
+                String line = reader.readLine();
+        try {
+            while (!line.isEmpty()) {
+                System.out.println(line);
+                line = reader.readLine();
+            }
+        } catch (NullPointerException e) {
+
+        }
+        line = reader.readLine();
+        System.out.println("Body");
+        try {
+            while (!line.isEmpty()) {
+                System.out.println(line);
+                line = reader.readLine();
+            }
+        } catch (NullPointerException e) {
+
+        }
 
         output.write(responseHeader);
         output.write(responseDocument);

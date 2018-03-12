@@ -26,4 +26,8 @@ public class HTTPRequest {
     public String getPath() {
         return path;
     }
+
+    public String getBody() {
+        return body;
+    }
 }
