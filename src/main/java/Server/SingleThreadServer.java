@@ -68,7 +68,7 @@ public class SingleThreadServer extends SimpleServer {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         // reader.lines().forEach(line -> System.out.println(line));
-                String line = reader.readLine();
+        String line = reader.readLine();
         try {
             while (!line.isEmpty()) {
                 System.out.println(line);
@@ -77,16 +77,22 @@ public class SingleThreadServer extends SimpleServer {
         } catch (NullPointerException e) {
 
         }
-        line = reader.readLine();
-        System.out.println("Body");
-        try {
-            while (!line.isEmpty()) {
-                System.out.println(line);
-                line = reader.readLine();
-            }
-        } catch (NullPointerException e) {
+        char[] bArray = new char[31];
+        reader.read(bArray, 0, 31);
 
-        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        System.out.println(stringBuilder.append(bArray).toString());
+//        line = reader.readLine();
+//        System.out.println("Body");
+//        try {
+//            while (!line.isEmpty()) {
+//                System.out.println(line);
+//                line = reader.readLine();
+//            }
+//        } catch (NullPointerException e) {
+//
+//        }
 
         output.write(responseHeader);
         output.write(responseDocument);

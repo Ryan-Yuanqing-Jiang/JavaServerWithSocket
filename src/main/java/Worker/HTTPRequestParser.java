@@ -89,7 +89,8 @@ public class HTTPRequestParser implements RequestParser {
         try {
             line = inputReader.readLine();
             // System.out.println(line);
-            while (!line.isEmpty()) {
+            while (line != null) {
+                System.out.println(line);
                 requestBody.append(line);
                 line = inputReader.readLine();
                 // System.out.println(line);

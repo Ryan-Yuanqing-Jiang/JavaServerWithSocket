@@ -1,7 +1,6 @@
 package Server;
 
-import Controller.HTTPRouter;
-import Worker.HTTPRequestParser;
+import Controller.HTTPReceiver;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -31,7 +30,7 @@ public class MultiThreadServer extends SimpleServer {
                         "Error accepting client connection", e);
             }
             new Thread(
-                    new HTTPRouter(
+                    new HTTPReceiver(
                             clientSocket)
             ).start();
         }

@@ -11,11 +11,11 @@ import java.net.Socket;
 /**
  * This class should take the client request from server class and direct to the correct service.
  */
-public class HTTPRouter implements Runnable {
+public class HTTPReceiver implements Runnable {
     private Socket clientSocket;
     private RequestParser<HTTPRequest> parser;
 
-    public HTTPRouter(Socket clientSocket) {
+    public HTTPReceiver(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.parser = new HTTPRequestParser();
     }
