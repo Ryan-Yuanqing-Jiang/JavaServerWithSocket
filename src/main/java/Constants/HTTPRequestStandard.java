@@ -1,0 +1,7 @@
+package Constants;
+
+public final class HTTPRequestStandard {
+    private HTTPRequestStandard() {}
+
+    public static final int REQUEST_LINE_LENGTH = 3;
+}

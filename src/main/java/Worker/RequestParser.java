@@ -1,7 +1,7 @@
 package Worker;
 
-import java.io.InputStream;
+import java.util.Map;
 
 public interface RequestParser<T> {
-    T parseRequest(InputStream input) throws InvalidRequestException ;
+    T parseRequest(String requestLine, Map<String, String> headers, String body) throws InvalidRequestException ;
 }

@@ -14,4 +14,8 @@ public enum HTTPRequestType {
     HTTPRequestType(String requestCode) {
         this.requestCode = requestCode;
     }
+
+    public String getRequestCode() {
+        return requestCode;
+    }
 }

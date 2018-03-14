@@ -4,30 +4,15 @@ import Constants.HTTPRequestType;
 
 import java.util.Map;
 
-public class HTTPRequest {
-    private HTTPRequestType type;
-    private String path;
-    private String protocol;
-    private Map<String, String> headers;
-    private String body;
+public interface HTTPRequest {
 
-    public HTTPRequest(HTTPRequestType type, String path, String protocol, Map<String, String> headers, String body) {
-        this.type = type;
-        this.path = path;
-        this.protocol = protocol;
-        this.headers = headers;
-        this.body = body;
-    }
+    HTTPRequestType getType();
 
-    public HTTPRequestType getType() {
-        return type;
-    }
+    String getPath();
 
-    public String getPath() {
-        return path;
-    }
+    String getProtocol();
 
-    public String getBody() {
-        return body;
-    }
+    String getBody();
+
+    String getHeader(String headerKey);
 }
