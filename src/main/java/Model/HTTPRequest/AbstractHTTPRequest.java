@@ -1,8 +1,7 @@
-package Model;
+package Model.HTTPRequest;
 
 import Constants.HTTPRequestType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractHTTPRequest implements HTTPRequest{
@@ -28,11 +27,6 @@ public abstract class AbstractHTTPRequest implements HTTPRequest{
     @Override
     public String getPath() {
         return this.path;
-    }
-
-    @Override
-    public String getProtocol() {
-        return this.protocol;
     }
 
     @Override

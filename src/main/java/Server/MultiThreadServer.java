@@ -4,10 +4,14 @@ import Controller.HTTPReceiver;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MultiThreadServer extends SimpleServer {
 
-    public MultiThreadServer(int socketPort) {
+    private Map<Long, Thread> threadMap = new HashMap<>();
+
+    public MultiThreadServer(int socketPort) throws IOException {
         super(socketPort);
     }
 
@@ -16,24 +20,30 @@ public class MultiThreadServer extends SimpleServer {
         synchronized(this){
             this.runningThread = Thread.currentThread();
         }
-        initSocket(this.socketPort);
-        while(! isStopped()){
-            Socket clientSocket = null;
+
+        while(!isStopped()){
             try {
-                clientSocket = this.serverSocket.accept();
+                Socket clientSocket = this.serverSocket.accept();
+                this.startThread(clientSocket);
             } catch (IOException e) {
-                if(isStopped()) {
-                    System.out.println("Server Stopped.") ;
-                    return;
-                }
-                throw new RuntimeException(
-                        "Error accepting client connection", e);
+                System.err.println("Terminating - I/O error occurred when waiting for a connection: \n");
+                e.getStackTrace();
+                return;
             }
-            new Thread(
-                    new HTTPReceiver(
-                            clientSocket)
-            ).start();
         }
+
         System.out.println("Server Stopped.") ;
+    }
+
+    /**
+     * Start a thread and register it in the Map
+     * @param clientSocket The client socket being connected.
+     */
+    public void startThread(Socket clientSocket) {
+        if (clientSocket.isConnected()) {
+            Thread threadToStart = new Thread(new HTTPReceiver(clientSocket));
+            threadToStart.start();
+            this.threadMap.put(threadToStart.getId(), threadToStart);
+        }
     }
 }

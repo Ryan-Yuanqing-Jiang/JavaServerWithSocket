@@ -1,4 +1,4 @@
-package Model;
+package Model.HTTPRequest;
 
 import Constants.HTTPRequestType;
 
@@ -9,8 +9,6 @@ public interface HTTPRequest {
     HTTPRequestType getType();
 
     String getPath();
-
-    String getProtocol();
 
     String getBody();
 

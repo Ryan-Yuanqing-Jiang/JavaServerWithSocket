@@ -1,12 +1,10 @@
 package Server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public interface HTTPServer extends Runnable {
-
-    void initSocket(int socketPort) throws RuntimeException;
-
     /**
      * Runs the server.
      */
@@ -15,7 +13,7 @@ public interface HTTPServer extends Runnable {
     /**
      * Stops the server.
      */
-    void stop();
+    void stop() throws IOException;
 
     boolean isStopped();
 }

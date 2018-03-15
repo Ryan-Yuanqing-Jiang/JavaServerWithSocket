@@ -1,4 +1,4 @@
-package Model;
+package Model.HTTPRequest;
 
 import Constants.HTTPRequestType;
 

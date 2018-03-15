@@ -1,11 +1,10 @@
 package Worker;
 
+import CustomException.InvalidRequestException;
 import com.sun.deploy.net.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,13 +22,12 @@ public class HTTPRequestReader {
      * the reading operations are done in sequence, hence they are private.
      * The Parser will then use getters to access the request fields.
      *
-     * @param input InputStream from the client socket.
+     * @param reader InputStream wrapped in a buffered reader from the client socket.
      * @throws InvalidRequestException
      */
-    public HTTPRequestReader(InputStream input) throws InvalidRequestException {
-        this.reader = new BufferedReader(new InputStreamReader(input));
+    public HTTPRequestReader(BufferedReader reader) throws InvalidRequestException {
+        this.reader = reader;
         this.headers = new HashMap<>();
-        System.out.println("Reading -- \n");
         readRequestLine();
         readRequestHeaders();
         readRequestBody();
@@ -38,7 +36,6 @@ public class HTTPRequestReader {
     private void readRequestLine() throws InvalidRequestException {
         try {
             requestLine = reader.readLine();
-            System.out.println(requestLine);
         } catch (IOException e) {
             throw new InvalidRequestException("Invalid Request Line - Not being able to read request line");
         }
@@ -49,7 +46,6 @@ public class HTTPRequestReader {
         try {
             line = this.reader.readLine();
             while (!line.isEmpty()) {
-                System.out.println(line);
                 String[] headerTuple = line.split(": ", 2);
                 if (headerTuple.length == 2) {
                     this.headers.put(headerTuple[0], headerTuple[1]);
@@ -71,6 +67,7 @@ public class HTTPRequestReader {
                 char[] charArray = new char[bodyLength];
                 reader.read(charArray, 0, bodyLength);
                 stringBuilder.append(charArray);
+
             } catch (NumberFormatException e) {
                 throw new InvalidRequestException("Invalid Request Header - No content-length provided");
             } catch (IOException e) {
@@ -80,7 +77,6 @@ public class HTTPRequestReader {
         } else {
             this.body = "";
         }
-        System.out.println(this.body);
     }
 
     public String getRequestLine() {

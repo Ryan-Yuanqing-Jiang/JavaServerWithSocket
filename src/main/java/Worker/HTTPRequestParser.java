@@ -2,37 +2,39 @@ package Worker;
 
 import Constants.HTTPRequestStandard;
 import Constants.HTTPRequestType;
+import CustomException.InvalidRequestException;
 import Factory.RequestFactory;
-import Model.HTTPRequest;
+import Model.HTTPRequest.HTTPRequest;
 import java.util.Map;
 
-// Not sure if this is the best way to utilize generics.
-public class HTTPRequestParser implements RequestParser<HTTPRequest> {
+/**
+ * Parse strings into request fields.
+ */
+public class HTTPRequestParser {
 
-    private RequestFactory requestFactory;
+    private String requestLine, requestPath, requestProtocol;
+    private HTTPRequestType requestType;
 
-    public HTTPRequestParser(RequestFactory requestFactory) {
-        this.requestFactory = requestFactory;
+    public HTTPRequestParser(String requestLine) throws InvalidRequestException {
+        this.requestLine = requestLine;
+        String[] lineFields = splitRequestLine(requestLine, HTTPRequestStandard.REQUEST_LINE_LENGTH);
+        this.requestType = parseRequestType(lineFields[0]);
+        this.requestPath = lineFields[1];
+        this.requestProtocol = lineFields[2];
     }
 
-    @Override
-    public HTTPRequest parseRequest(
-            String requestLine,
-            Map<String, String> headers,
-            String body) throws InvalidRequestException {
-
-        String[] requestLineFields = requestLine.split(" ");
-        if (requestLineFields.length != HTTPRequestStandard.REQUEST_LINE_LENGTH)
-            throw new InvalidRequestException("Invalid Request Line - Not all 3 fields are provided");
-
-        HTTPRequestType requestType = parseRequestType(requestLineFields[0]);
-        String requestPath = requestLineFields[1];
-        String requestProtocol = requestLineFields[2];
-
-        return this.requestFactory.createRequest(requestType, requestPath, requestProtocol, headers, body);
+    public String[] splitRequestLine(String requestLine, int lineLength) throws InvalidRequestException {
+        String[] requestFields = requestLine.split(" ");
+        if (requestFields.length != lineLength)
+            throw new InvalidRequestException("Invalid Request Line - Expecting: " + lineLength + " but got " + requestFields);
+        for (String field:requestFields) {
+            if (field.isEmpty())
+                throw new InvalidRequestException("Invalid Request Line - Empty field detected.");
+        }
+        return requestFields;
     }
 
-    private HTTPRequestType parseRequestType(String rawType) throws InvalidRequestException {
+    public HTTPRequestType parseRequestType(String rawType) throws InvalidRequestException {
         System.out.println("Trying to convert type: " + rawType + "---");
         for (HTTPRequestType type: HTTPRequestType.values()) {
             if (type.getRequestCode().equals(rawType)) {
@@ -40,5 +42,21 @@ public class HTTPRequestParser implements RequestParser<HTTPRequest> {
             }
         }
         throw new InvalidRequestException("Invalid Request Type - Not matching the HTTP types this server can process");
+    }
+
+    public String getRequestLine() {
+        return requestLine;
+    }
+
+    public String getRequestPath() {
+        return requestPath;
+    }
+
+    public String getRequestProtocol() {
+        return requestProtocol;
+    }
+
+    public HTTPRequestType getRequestType() {
+        return requestType;
     }
 }

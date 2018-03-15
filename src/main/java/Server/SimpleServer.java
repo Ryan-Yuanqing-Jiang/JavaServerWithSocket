@@ -20,34 +20,20 @@ public abstract class SimpleServer implements HTTPServer {
      * Making sure that the server can not be instantiated without a port.
      * @param socketPort
      */
-    public SimpleServer(int socketPort) {
+    public SimpleServer(int socketPort) throws IOException {
         this.socketPort = socketPort;
         this.isStopped = false;
-        this.runningThread = null;
-    }
 
-    /**
-     * Initialise the server socket on the given port.
-     * @param socketPort The port to listen to.
-     * @throws RuntimeException Exception when can't listen to the port.
-     */
-    @Override
-    public void initSocket(int socketPort) throws RuntimeException {
-        try {
-            this.serverSocket = new ServerSocket(socketPort);
-        } catch (IOException e) {
-            throw new RuntimeException("Can NOT initiate port" + socketPort, e);
+        synchronized (this) {
+            this.runningThread = Thread.currentThread();
         }
+        this.serverSocket = new ServerSocket(this.socketPort);
     }
 
     @Override
-    public synchronized void stop() throws RuntimeException {
+    public synchronized void stop() throws IOException {
         this.isStopped = true;
-        try {
-            this.serverSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't close the server", e);
-        }
+        this.serverSocket.close();
     }
 
     /**

@@ -1,37 +1,28 @@
 package Server;
 
 import Factory.RequestFactory;
-import Model.HTTPRequest;
+import Model.HTTPRequest.HTTPRequest;
 import Worker.HTTPRequestParser;
 import Worker.HTTPRequestReader;
-import Worker.InvalidRequestException;
+import CustomException.InvalidRequestException;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SingleThreadServer extends SimpleServer {
 
 
     /**
-     * Making sure that the server can not be instantiated without a port.
+     * This server is just a playground, so not need to really use it in production.
      *
      * @param socketPort
      */
-    public SingleThreadServer(int socketPort) {
+    public SingleThreadServer(int socketPort) throws IOException {
         super(socketPort);
     }
 
     @Override
     public void run() throws RuntimeException {
-        // Not sure what this is doing, should ask
-        // My guess is that it's preventing other threads from accessing
-        // this object and then put this running function into the current thread.
-        synchronized (this) {
-            this.runningThread = Thread.currentThread();
-        }
-        super.initSocket(this.socketPort);
-
         // If the server is still running,
         // here comes the classic server loop.
         while (!this.isStopped) {
@@ -56,11 +47,6 @@ public class SingleThreadServer extends SimpleServer {
         InputStream input  = clientSocket.getInputStream();
         OutputStream output = clientSocket.getOutputStream();
         long time = System.currentTimeMillis();
-//        if (input.read() <= 0) {
-//            System.out.println("filtered ######");
-//            clientSocket.close();
-//            return;
-//        }
 
         byte[] responseDocument = ("<html><body>" +
                 "Singlethreaded Server: " +
@@ -76,14 +62,15 @@ public class SingleThreadServer extends SimpleServer {
         HTTPRequestReader requestReader;
         HTTPRequestParser requestParser;
         HTTPRequest httpRequest;
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(input));
+
+        if (!inputReader.ready())
+            return;
+
         try {
-            requestReader = new HTTPRequestReader(input);
+            requestReader = new HTTPRequestReader(inputReader);
             requestParser = new HTTPRequestParser(new RequestFactory());
             httpRequest = requestParser.parseRequest(requestReader.getRequestLine(), requestReader.getHeaders(), requestReader.getBody());
-
-//            System.out.println(httpRequest.getType().getRequestCode());
-//            System.out.println(httpRequest.getPath());
-//            System.out.println(httpRequest.getBody());
 
             output.write(responseHeader);
             output.write(responseDocument);

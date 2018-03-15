@@ -1,10 +1,11 @@
 package Factory;
 
 import Constants.HTTPRequestType;
-import Model.GETRequest;
-import Model.HTTPRequest;
-import Model.POSTRequest;
-import Worker.InvalidRequestException;
+import CustomException.UnkownRequestTypeException;
+import Model.HTTPRequest.GETRequest;
+import Model.HTTPRequest.HTTPRequest;
+import Model.HTTPRequest.POSTRequest;
+import CustomException.InvalidRequestException;
 
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class RequestFactory {
             String requestPath,
             String requestProtocol,
             Map<String, String> headers,
-            String body) throws InvalidRequestException
+            String body) throws UnkownRequestTypeException
     {
 
         switch (requestType) {
@@ -37,7 +38,7 @@ public class RequestFactory {
             case POST:
                 return new POSTRequest(requestPath, requestProtocol, headers, body);
             default:
-                throw new InvalidRequestException("Request Parsing Error - We don't support " + requestType.getRequestCode() + " request yet");
+                throw new UnkownRequestTypeException("Unkown Request Type - Request Parsing Error:  " + requestType.getRequestCode() + " request yet");
         }
     }
 }
