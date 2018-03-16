@@ -14,18 +14,8 @@ public class MultiThreadServerTest {
 
     @Before
     public void setUp() throws IOException {
-        System.out.println("Testing Starts --- " + HTTP_PORT);
         server = new MultiThreadServer(HTTP_PORT);
     }
-
-//    @Test
-//    public void run() {
-//    }
-//
-//    @Test
-//    public void startThread() {
-//
-//    }
 
     @Test
     public void stop() throws IOException {

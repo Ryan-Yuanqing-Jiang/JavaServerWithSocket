@@ -3,9 +3,7 @@ package Worker;
 import Constants.HTTPRequestStandard;
 import Constants.HTTPRequestType;
 import CustomException.InvalidRequestException;
-import Factory.RequestFactory;
-import Model.HTTPRequest.HTTPRequest;
-import java.util.Map;
+import CustomException.UnknownRequestTypeException;
 
 /**
  * Parse strings into request fields.
@@ -34,14 +32,13 @@ public class HTTPRequestParser {
         return requestFields;
     }
 
-    public HTTPRequestType parseRequestType(String rawType) throws InvalidRequestException {
-        System.out.println("Trying to convert type: " + rawType + "---");
+    public HTTPRequestType parseRequestType(String rawType) throws UnknownRequestTypeException {
         for (HTTPRequestType type: HTTPRequestType.values()) {
             if (type.getRequestCode().equals(rawType)) {
                 return type;
             }
         }
-        throw new InvalidRequestException("Invalid Request Type - Not matching the HTTP types this server can process");
+        throw new UnknownRequestTypeException("Unknown Request Type - Not matching the HTTP types this server can process");
     }
 
     public String getRequestLine() {

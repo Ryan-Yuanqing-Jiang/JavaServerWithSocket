@@ -1,7 +1,7 @@
 package Factory;
 
 import Constants.HTTPRequestType;
-import CustomException.UnkownRequestTypeException;
+import CustomException.UnknownRequestTypeException;
 import Model.HTTPRequest.GETRequest;
 import Model.HTTPRequest.HTTPRequest;
 import Model.HTTPRequest.POSTRequest;
@@ -29,7 +29,7 @@ public class RequestFactory {
             String requestPath,
             String requestProtocol,
             Map<String, String> headers,
-            String body) throws UnkownRequestTypeException
+            String body) throws UnknownRequestTypeException
     {
 
         switch (requestType) {
@@ -38,7 +38,9 @@ public class RequestFactory {
             case POST:
                 return new POSTRequest(requestPath, requestProtocol, headers, body);
             default:
-                throw new UnkownRequestTypeException("Unkown Request Type - Request Parsing Error:  " + requestType.getRequestCode() + " request yet");
+                throw new UnknownRequestTypeException("Unkown Request Type - Request Parsing Error:  " + requestType.getRequestCode() + " request yet");
         }
     }
+
+    // Should factory handle validation of the params being fed?
 }

@@ -1,8 +1,7 @@
 package Worker;
 
+import Constants.HTTPRequestStandard;
 import CustomException.InvalidRequestException;
-import com.sun.deploy.net.HttpRequest;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class HTTPRequestReader {
     private void readRequestLine() throws InvalidRequestException {
         try {
             requestLine = reader.readLine();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new InvalidRequestException("Invalid Request Line - Not being able to read request line");
         }
     }
@@ -54,16 +53,16 @@ public class HTTPRequestReader {
                 }
                 line = this.reader.readLine();
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new InvalidRequestException("Invalid Request Header - Not being able to read request header");
         }
     }
 
     private void readRequestBody() throws InvalidRequestException {
         StringBuilder stringBuilder = new StringBuilder();
-        if (this.headers.containsKey(HttpRequest.CONTENT_LENGTH)) {
+        if (this.headers.containsKey(HTTPRequestStandard.CONTENT_LENGTH)) {
             try {
-                int bodyLength = Integer.parseInt(this.headers.get(HttpRequest.CONTENT_LENGTH));
+                int bodyLength = Integer.parseInt(this.headers.get(HTTPRequestStandard.CONTENT_LENGTH));
                 char[] charArray = new char[bodyLength];
                 reader.read(charArray, 0, bodyLength);
                 stringBuilder.append(charArray);
